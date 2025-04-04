@@ -9,11 +9,15 @@ public record Score(int homeScore, int awayScore) {
         }
     }
 
-    public Score() {
-        this(0, 0);
+    public static Score initialize() {
+        return new Score(0, 0);
     }
 
     public Score update(int homeScore, int awayScore) {
         return new Score(homeScore, awayScore);
+    }
+
+    public int total() {
+        return homeScore + awayScore;
     }
 }

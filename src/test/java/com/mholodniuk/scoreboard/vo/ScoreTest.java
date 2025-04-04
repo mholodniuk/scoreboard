@@ -8,7 +8,7 @@ class ScoreTest {
 
     @Test
     void test_EmptyScoreShouldInitializeZeros() {
-        var score = new Score();
+        var score = Score.initialize();
         assertEquals(0, score.homeScore(), "initial home score should be zero");
         assertEquals(0, score.awayScore(), "initial away score should be zero");
     }
@@ -27,13 +27,19 @@ class ScoreTest {
 
     @Test
     void test_ScoreCanBeUpdatedWithPositiveValues() {
-        var updatedScore = new Score().update(1, 1);
+        var updatedScore = Score.initialize().update(1, 1);
         assertEquals(1, updatedScore.homeScore(), "initial home score should be updated");
         assertEquals(1, updatedScore.awayScore(), "initial away score should be updated");
     }
 
     @Test
     void test_ScoreCannotBeUpdatedWithNegativeValues() {
-        assertThrows(IllegalArgumentException.class, () -> new Score().update(-1, -1), "cannot update scores with negative values");
+        assertThrows(IllegalArgumentException.class, () -> Score.initialize().update(-1, -1), "cannot update scores with negative values");
+    }
+
+    @Test
+    void test_ScoreTotalIsCalculatedBasingOnHomeAndAwayScores() {
+        var score = Score.initialize().update(10, 6);
+        assertEquals(16, score.total(), "score's total is not valid");
     }
 }
