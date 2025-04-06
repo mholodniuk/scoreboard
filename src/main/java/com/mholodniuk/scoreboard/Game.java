@@ -18,11 +18,11 @@ public final class Game {
         this.score = score;
     }
 
-    public Game(Team homeTeam, Team awayTeam) {
+    Game(Team homeTeam, Team awayTeam) {
         this(homeTeam, awayTeam, Score.initialize());
     }
 
-    public void updateScore(Score score) {
+    void updateScore(Score score) {
         this.score = score;
     }
 
