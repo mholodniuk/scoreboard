@@ -5,19 +5,19 @@ import com.mholodniuk.scoreboard.vo.ScoreboardSummary;
 import com.mholodniuk.scoreboard.vo.Team;
 
 public class Scoreboard {
-    Game startGame(Team homeTeam, Team awayTeam) {
+    public Game startGame(Team homeTeam, Team awayTeam) {
         return null;
     }
 
-    void updateGameScore(Game game, Score score) {
+    public void updateGameScore(Game game, Score score) {
 
     }
 
-    void finishGame(Game game) {
+    public void finishGame(Game game) {
 
     }
 
-    ScoreboardSummary collectSummary() {
+    public ScoreboardSummary collectSummary() {
         return null;
     }
 }

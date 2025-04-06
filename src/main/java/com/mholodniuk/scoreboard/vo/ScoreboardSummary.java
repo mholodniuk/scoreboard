@@ -1,4 +1,8 @@
 package com.mholodniuk.scoreboard.vo;
 
-public record ScoreboardSummary() {
+import com.mholodniuk.scoreboard.Game;
+
+import java.util.List;
+
+public record ScoreboardSummary(List<Game> games) {
 }
