@@ -1,10 +1,10 @@
 package com.mholodniuk.scoreboard;
 
 import com.mholodniuk.scoreboard.vo.Score;
-import com.mholodniuk.scoreboard.vo.ScoreBoardSummary;
+import com.mholodniuk.scoreboard.vo.ScoreboardSummary;
 import com.mholodniuk.scoreboard.vo.Team;
 
-public class ScoreBoard {
+public class Scoreboard {
     Game startGame(Team homeTeam, Team awayTeam) {
         return null;
     }
@@ -17,7 +17,7 @@ public class ScoreBoard {
 
     }
 
-    ScoreBoardSummary collectSummary() {
+    ScoreboardSummary collectSummary() {
         return null;
     }
 }
