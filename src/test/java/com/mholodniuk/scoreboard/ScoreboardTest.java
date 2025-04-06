@@ -154,7 +154,7 @@ class ScoreboardTest {
         }
 
         @Test
-        void test_FinishGameShouldBeIdempotent() {
+        void test_FinishGameShouldMayBeCalledMultipleTimesOnOneGame() {
             var teams = createTeamPair("Team 1", "Team 2");
             var scoreboard = new Scoreboard();
             var startedGame = scoreboard.startGame(teams.first(), teams.second());

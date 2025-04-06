@@ -1,15 +1,15 @@
 package com.mholodniuk.scoreboard;
 
+import com.mholodniuk.scoreboard.util.Pair;
 import com.mholodniuk.scoreboard.vo.Score;
 import com.mholodniuk.scoreboard.vo.ScoreboardSummary;
 import com.mholodniuk.scoreboard.vo.Team;
-import com.mholodniuk.scoreboard.util.Pair;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static com.mholodniuk.scoreboard.util.NullSafetyUtils.requireNonNull;
 import static com.mholodniuk.scoreboard.util.CollectionUtils.findFirstMatchingOrNull;
+import static com.mholodniuk.scoreboard.util.NullSafetyUtils.requireNonNull;
 
 public class Scoreboard {
     private final List<Pair<Game, LocalDateTime /* Insertion time */>> trackedGames = new ArrayList<>();
@@ -50,7 +50,8 @@ public class Scoreboard {
 
     public ScoreboardSummary collectSummary() {
         var orderedGames = trackedGames.stream()
-                .sorted(new GameAndInsertionTimeComparator()).map(Pair::first)
+                .sorted(new GameAndInsertionTimeComparator())
+                .map(Pair::first)
                 .toList();
 
         return ScoreboardSummary.of(orderedGames);
@@ -62,7 +63,7 @@ public class Scoreboard {
 
     private static class GameAndInsertionTimeComparator implements Comparator<Pair<Game, LocalDateTime>> {
         @Override
-        public int compare(Pair<Game, LocalDateTime> game1, Pair<Game, LocalDateTime>game2) {
+        public int compare(Pair<Game, LocalDateTime> game1, Pair<Game, LocalDateTime> game2) {
             int scoreComparison = Integer.compare(game2.first().score().total(), game1.first().score().total());
 
             if (scoreComparison != 0) {
