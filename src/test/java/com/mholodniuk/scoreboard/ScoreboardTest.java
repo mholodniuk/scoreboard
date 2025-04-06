@@ -45,9 +45,9 @@ class ScoreboardTest {
             var team = new Team("Non-null Team");
             var scoreboard = new Scoreboard();
 
-            assertThrows(IllegalStateException.class, () -> scoreboard.startGame(null, null));
-            assertThrows(IllegalStateException.class, () -> scoreboard.startGame(team, null));
-            assertThrows(IllegalStateException.class, () -> scoreboard.startGame(null, team));
+            assertThrows(IllegalArgumentException.class, () -> scoreboard.startGame(null, null));
+            assertThrows(IllegalArgumentException.class, () -> scoreboard.startGame(team, null));
+            assertThrows(IllegalArgumentException.class, () -> scoreboard.startGame(null, team));
         }
 
         @Test

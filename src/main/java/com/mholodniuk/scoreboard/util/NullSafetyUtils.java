@@ -12,7 +12,7 @@ public class NullSafetyUtils {
     public static void requireNonNull(Object... objects) {
         for (Object object : objects) {
             if (object == null) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Objects cannot be null");
             }
         }
     }

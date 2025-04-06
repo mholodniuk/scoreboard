@@ -12,3 +12,4 @@
 ## Technical
 - Game can be only modified and initialized using Scoreboard
 - Games are identified by their memory address (no ID is used)
+- Custom domain exception classes are not defined, messages should provide sufficient failure description
