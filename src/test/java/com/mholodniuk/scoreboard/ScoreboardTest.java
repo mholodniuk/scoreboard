@@ -96,7 +96,7 @@ class ScoreboardTest {
         }
 
         @Test
-        void test_UpdateGameScoreShouldFailForUntrackedGame() {
+        void test_UpdateGameScoreShouldDoNothingForUntrackedGame() {
             var team1 = new Team("Team 1");
             var team2 = new Team("Team 2");
             var scoreboard = new Scoreboard();
@@ -104,8 +104,7 @@ class ScoreboardTest {
 
             scoreboard.updateGameScore(untrackedGame, new Score(10, 0));
 
-            var scoreboardSummary = scoreboard.collectSummary();
-            assertEquals(0, scoreboardSummary.games().size());
+            assertEquals(new Score(0, 0), untrackedGame.score());
         }
 
         @Test
@@ -177,6 +176,27 @@ class ScoreboardTest {
 
             var scoreboardSummary = scoreboard.collectSummary();
             assertEquals(0, scoreboardSummary.games().size());
+        }
+
+        @Test
+        void test_RestartGameShouldBePossibleAfterFinishing() {
+            var team1 = new Team("Team 1");
+            var team2 = new Team("Team 2");
+            var scoreboard = new Scoreboard();
+            var startedGame1 = scoreboard.startGame(team1, team2);
+
+            var scoreboardSummary1 = scoreboard.collectSummary();
+            assertEquals(1, scoreboardSummary1.games().size());
+
+            scoreboard.finishGame(startedGame1);
+
+            var scoreboardSummary2 = scoreboard.collectSummary();
+            assertEquals(0, scoreboardSummary2.games().size());
+
+            scoreboard.startGame(team1, team2);
+
+            var scoreboardSummary3 = scoreboard.collectSummary();
+            assertEquals(1, scoreboardSummary3.games().size());
         }
 
         @Test

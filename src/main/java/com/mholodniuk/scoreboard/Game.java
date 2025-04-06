@@ -6,6 +6,7 @@ import com.mholodniuk.scoreboard.vo.util.Pair;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.List;
 
 public final class Game {
     private final Team homeTeam;
@@ -36,6 +37,10 @@ public final class Game {
 
     public Team awayTeam() {
         return awayTeam;
+    }
+
+    public List<Team> teams() {
+        return List.of(homeTeam, awayTeam);
     }
 
     @Override
