@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.mholodniuk.scoreboard.util.NullSafetyUtils.requireNonNull;
-import static com.mholodniuk.scoreboard.util.StreamUtils.findFirstMatchingOrNull;
+import static com.mholodniuk.scoreboard.util.CollectionUtils.findFirstMatchingOrNull;
 
 public class Scoreboard {
     private final List<Pair<Game, LocalDateTime /* Insertion time */>> trackedGames = new ArrayList<>();

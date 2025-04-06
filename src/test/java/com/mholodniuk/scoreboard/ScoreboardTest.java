@@ -1,5 +1,6 @@
 package com.mholodniuk.scoreboard;
 
+import com.mholodniuk.scoreboard.util.Pair;
 import com.mholodniuk.scoreboard.vo.Score;
 import com.mholodniuk.scoreboard.vo.Team;
 import org.junit.jupiter.api.Nested;
@@ -8,23 +9,21 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ScoreboardTest {
-
     @Nested
     class CreateGameTest {
         @Test
         void test_StartGameShouldAddNewValidGame() {
-            var team1 = new Team("Team 1");
-            var team2 = new Team("Team 2");
+            var teams = createTeamPair("Team 1", "Team 2");
             var scoreboard = new Scoreboard();
 
-            scoreboard.startGame(team1, team2);
+            scoreboard.startGame(teams.first(), teams.second());
 
             var scoreboardSummary = scoreboard.collectSummary();
             assertEquals(1, scoreboardSummary.games().size());
 
             var game = scoreboardSummary.games().getFirst();
-            assertEquals(team1, game.homeTeam());
-            assertEquals(team2, game.awayTeam());
+            assertEquals(teams.first(), game.homeTeam());
+            assertEquals(teams.second(), game.awayTeam());
             assertEquals(new Score(0, 0), game.score());
         }
 
@@ -38,6 +37,7 @@ class ScoreboardTest {
             scoreboard.startGame(team1, team2);
 
             assertThrows(IllegalStateException.class, () -> scoreboard.startGame(team1, team3));
+            assertThrows(IllegalStateException.class, () -> scoreboard.startGame(team3, team2));
         }
 
         @Test
@@ -63,10 +63,9 @@ class ScoreboardTest {
     class UpdateGameTest {
         @Test
         void test_UpdateGameScoreShouldUpdateSuccessfullyForTrackedGame() {
-            var team1 = new Team("Team 1");
-            var team2 = new Team("Team 2");
+            var teams = createTeamPair("Team 1", "Team 2");
             var scoreboard = new Scoreboard();
-            var startedGame = scoreboard.startGame(team1, team2);
+            var startedGame = scoreboard.startGame(teams.first(), teams.second());
 
             scoreboard.updateGameScore(startedGame, new Score(1, 0));
 
@@ -79,10 +78,9 @@ class ScoreboardTest {
 
         @Test
         void test_UpdateGameScoreShouldUpdateAllowMultipleUpdatesForTrackedGame() {
-            var team1 = new Team("Team 1");
-            var team2 = new Team("Team 2");
+            var teams = createTeamPair("Team 1", "Team 2");
             var scoreboard = new Scoreboard();
-            var startedGame = scoreboard.startGame(team1, team2);
+            var startedGame = scoreboard.startGame(teams.first(), teams.second());
 
             scoreboard.updateGameScore(startedGame, new Score(1, 0));
             scoreboard.updateGameScore(startedGame, new Score(1, 1));
@@ -97,10 +95,9 @@ class ScoreboardTest {
 
         @Test
         void test_UpdateGameScoreShouldDoNothingForUntrackedGame() {
-            var team1 = new Team("Team 1");
-            var team2 = new Team("Team 2");
+            var teams = createTeamPair("Team 1", "Team 2");
             var scoreboard = new Scoreboard();
-            var untrackedGame = new Game(team1, team2); // untracked game might come from different scoreboard
+            var untrackedGame = new Game(teams.first(), teams.second()); // untracked game might come from different scoreboard
 
             scoreboard.updateGameScore(untrackedGame, new Score(10, 0));
 
@@ -114,10 +111,9 @@ class ScoreboardTest {
 
         @Test
         void test_UpdateGameScoreShouldFailForNullScore() {
-            var team1 = new Team("Team 1");
-            var team2 = new Team("Team 2");
+            var teams = createTeamPair("Team 1", "Team 2");
             var scoreboard = new Scoreboard();
-            var startedGame = scoreboard.startGame(team1, team2);
+            var startedGame = scoreboard.startGame(teams.first(), teams.second());
 
             assertThrows(IllegalArgumentException.class, () -> scoreboard.updateGameScore(startedGame, null));
         }
@@ -127,10 +123,9 @@ class ScoreboardTest {
     class FinishGameTest {
         @Test
         void test_FinishGameShouldRemoveTrackedGame() {
-            var team1 = new Team("Team 1");
-            var team2 = new Team("Team 2");
+            var teams = createTeamPair("Team 1", "Team 2");
             var scoreboard = new Scoreboard();
-            var startedGame = scoreboard.startGame(team1, team2);
+            var startedGame = scoreboard.startGame(teams.first(), teams.second());
 
             var scoreboardSummaryBeforeFinishing = scoreboard.collectSummary();
             assertEquals(1, scoreboardSummaryBeforeFinishing.games().size());
@@ -143,13 +138,11 @@ class ScoreboardTest {
 
         @Test
         void test_FinishGameShouldIgnoreUntrackedGame() {
-            var team1 = new Team("Team 1");
-            var team2 = new Team("Team 2");
-            var team3 = new Team("Team 3");
-            var team4 = new Team("Team 4");
+            var teamsPair1 = createTeamPair("Team 1", "Team 2");
+            var teamsPair2 = createTeamPair("Team 3", "Team 4");
             var scoreboard = new Scoreboard();
-            scoreboard.startGame(team1, team2);
-            var untrackedGame = new Game(team3, team4); // untracked game might come from different scoreboard
+            scoreboard.startGame(teamsPair1.first(), teamsPair1.second());
+            var untrackedGame = new Game(teamsPair2.first(), teamsPair2.second()); // untracked game might come from different scoreboard
 
             var scoreboardSummaryBeforeFinishing = scoreboard.collectSummary();
             assertEquals(1, scoreboardSummaryBeforeFinishing.games().size());
@@ -162,10 +155,9 @@ class ScoreboardTest {
 
         @Test
         void test_FinishGameShouldBeIdempotent() {
-            var team1 = new Team("Team 1");
-            var team2 = new Team("Team 2");
+            var teams = createTeamPair("Team 1", "Team 2");
             var scoreboard = new Scoreboard();
-            var startedGame = scoreboard.startGame(team1, team2);
+            var startedGame = scoreboard.startGame(teams.first(), teams.second());
 
             var scoreboardSummaryBeforeFinishing = scoreboard.collectSummary();
             assertEquals(1, scoreboardSummaryBeforeFinishing.games().size());
@@ -180,10 +172,9 @@ class ScoreboardTest {
 
         @Test
         void test_RestartGameShouldBePossibleAfterFinishing() {
-            var team1 = new Team("Team 1");
-            var team2 = new Team("Team 2");
+            var teams = createTeamPair("Team 1", "Team 2");
             var scoreboard = new Scoreboard();
-            var startedGame1 = scoreboard.startGame(team1, team2);
+            var startedGame1 = scoreboard.startGame(teams.first(), teams.second());
 
             var scoreboardSummary1 = scoreboard.collectSummary();
             assertEquals(1, scoreboardSummary1.games().size());
@@ -193,7 +184,7 @@ class ScoreboardTest {
             var scoreboardSummary2 = scoreboard.collectSummary();
             assertEquals(0, scoreboardSummary2.games().size());
 
-            scoreboard.startGame(team1, team2);
+            scoreboard.startGame(teams.first(), teams.second());
 
             var scoreboardSummary3 = scoreboard.collectSummary();
             assertEquals(1, scoreboardSummary3.games().size());
@@ -215,17 +206,14 @@ class ScoreboardTest {
 
         @Test
         void test_CollectSummaryShouldOrderGamesByTotalScoreDescending() {
-            var team1 = new Team("Team 1");
-            var team2 = new Team("Team 2");
-            var team3 = new Team("Team 3");
-            var team4 = new Team("Team 4");
-            var team5 = new Team("Team 5");
-            var team6 = new Team("Team 6");
+            var teamsPair1 = createTeamPair("Team 1", "Team 2");
+            var teamsPair2 = createTeamPair("Team 3", "Team 4");
+            var teamsPair3 = createTeamPair("Team 5", "Team 6");
 
             var scoreboard = new Scoreboard();
-            var game1 = scoreboard.startGame(team1, team2);
-            var game2 = scoreboard.startGame(team3, team4);
-            var game3 = scoreboard.startGame(team5, team6);
+            var game1 = scoreboard.startGame(teamsPair1.first(), teamsPair1.second());
+            var game2 = scoreboard.startGame(teamsPair2.first(), teamsPair2.second());
+            var game3 = scoreboard.startGame(teamsPair3.first(), teamsPair3.second());
 
             scoreboard.updateGameScore(game1, new Score(1, 2));
             scoreboard.updateGameScore(game2, new Score(2, 0));
@@ -241,17 +229,14 @@ class ScoreboardTest {
 
         @Test
         void test_CollectSummaryShouldUseRecencyForGamesWithSameTotalScore() {
-            var team1 = new Team("Team 1");
-            var team2 = new Team("Team 2");
-            var team3 = new Team("Team 3");
-            var team4 = new Team("Team 4");
-            var team5 = new Team("Team 5");
-            var team6 = new Team("Team 6");
+            var teamsPair1 = createTeamPair("Team 1", "Team 2");
+            var teamsPair2 = createTeamPair("Team 3", "Team 4");
+            var teamsPair3 = createTeamPair("Team 5", "Team 6");
 
             var scoreboard = new Scoreboard();
-            var game1 = scoreboard.startGame(team1, team2);
-            var game2 = scoreboard.startGame(team3, team4);
-            var game3 = scoreboard.startGame(team5, team6);
+            var game1 = scoreboard.startGame(teamsPair1.first(), teamsPair1.second());
+            var game2 = scoreboard.startGame(teamsPair2.first(), teamsPair2.second());
+            var game3 = scoreboard.startGame(teamsPair3.first(), teamsPair3.second());
 
             scoreboard.updateGameScore(game1, new Score(2, 2));
             scoreboard.updateGameScore(game2, new Score(2, 0));
@@ -264,5 +249,9 @@ class ScoreboardTest {
             assertEquals(game1, scoreboardSummary.games().get(1));
             assertEquals(game2, scoreboardSummary.games().get(2));
         }
+    }
+
+    private Pair<Team, Team> createTeamPair(String teamName1, String teamName2) {
+        return new Pair<>(new Team(teamName1), new Team(teamName2));
     }
 }

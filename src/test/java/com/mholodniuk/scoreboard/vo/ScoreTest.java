@@ -15,7 +15,8 @@ class ScoreTest {
 
     @Test
     void test_NewScoreAllowsOnlyPositiveValues() {
-        assertThrows(IllegalArgumentException.class, () -> new Score(-1, -1), "initial scores should be negative");
+        assertThrows(IllegalArgumentException.class, () -> new Score(1, -1), "initial scores should be negative");
+        assertThrows(IllegalArgumentException.class, () -> new Score(-1, 1), "initial scores should be negative");
     }
 
     @Test
