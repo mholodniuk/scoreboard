@@ -15,7 +15,7 @@
 - Games are unique in one scoreboard (e.g. there cannot be two games for any team happening at once)
 - There can be multiple scoreboards associated with multiple games, so:
   - Only games that are within the scope of a given scoreboard can be affected by the scoreboard operations (e.g. scoreboard 1 cannot update games coming from scoreboard 2)
-  - Games that are untracked by given scoreboard are ignored
+  - Games that are not tracked by given scoreboard are ignored
 
 ### Technical
 - Game can be only modified and initialized using Scoreboard
