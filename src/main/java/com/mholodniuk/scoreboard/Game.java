@@ -5,7 +5,11 @@ import com.mholodniuk.scoreboard.vo.Team;
 
 import java.util.List;
 
+import java.util.Objects;
+import java.util.UUID;
+
 public final class Game {
+    private final UUID internalId = UUID.randomUUID();
     private final Team homeTeam;
     private final Team awayTeam;
     private Score score;
@@ -43,5 +47,17 @@ public final class Game {
     @Override
     public String toString() {
         return homeTeam.name() + " " + score.homeScore() + " - " + awayTeam.name() + " " + score.homeScore();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Game game = (Game) o;
+        return Objects.equals(internalId, game.internalId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(internalId);
     }
 }

@@ -51,6 +51,18 @@ class ScoreboardTest {
         }
 
         @Test
+        void test_StartingSameGameInDifferentScoreboardsProducesDifferentGames() {
+            var teams = createTeamPair("Team 1", "Team 2");
+            var scoreboard1 = new Scoreboard();
+            var scoreboard2 = new Scoreboard();
+
+            var game1 = scoreboard1.startGame(teams.first(), teams.second());
+            var game2 = scoreboard2.startGame(teams.first(), teams.second());
+
+            assertNotEquals(game1, game2);
+        }
+
+        @Test
         void test_StartGameShouldNotAllowSameTeamForHomeAndAway() {
             var team = new Team("Team");
             var scoreboard = new Scoreboard();
@@ -97,7 +109,7 @@ class ScoreboardTest {
         void test_UpdateGameScoreShouldDoNothingForUntrackedGame() {
             var teams = createTeamPair("Team 1", "Team 2");
             var scoreboard = new Scoreboard();
-            var untrackedGame = new Game(teams.first(), teams.second()); // untracked game might come from different scoreboard
+            var untrackedGame = new Scoreboard().startGame(teams.first(), teams.second()); // untracked game coming from different scoreboard
 
             scoreboard.updateGameScore(untrackedGame, new Score(10, 0));
 
@@ -142,7 +154,7 @@ class ScoreboardTest {
             var teamsPair2 = createTeamPair("Team 3", "Team 4");
             var scoreboard = new Scoreboard();
             scoreboard.startGame(teamsPair1.first(), teamsPair1.second());
-            var untrackedGame = new Game(teamsPair2.first(), teamsPair2.second()); // untracked game might come from different scoreboard
+            var untrackedGame = new Scoreboard().startGame(teamsPair2.first(), teamsPair2.second()); // untracked game coming from different scoreboard
 
             var scoreboardSummaryBeforeFinishing = scoreboard.collectSummary();
             assertEquals(1, scoreboardSummaryBeforeFinishing.games().size());
