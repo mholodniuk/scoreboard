@@ -27,4 +27,38 @@ class ScoreboardTest {
 
         }
     }
+
+    @Nested
+    class UpdateGameTest {
+        void test_UpdateGameScoreShouldUpdateSuccessfullyForTrackedGame() {
+
+        }
+
+        void test_UpdateGameScoreShouldFailForUntrackedGame() {
+
+        }
+
+        void test_UpdateGameScoreShouldRejectNegativeValues() {
+
+        }
+
+        void test_UpdateGameScoreShouldAllowSameScoreUpdate() {
+
+        }
+    }
+
+    @Nested
+    class FinishGameTest {
+        void test_FinishGameShouldRemoveTrackedGame() {
+
+        }
+
+        void test_FinishGameShouldIgnoreUntrackedGame() {
+
+        }
+
+        void test_FinishGameShouldBeIdempotent() {
+
+        }
+    }
 }
